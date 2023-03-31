@@ -6,7 +6,7 @@ import PrismaPlugin from '@pothos/plugin-prisma'
 import ScopeAuthPlugin from '@pothos/plugin-scope-auth'
 
 import { Prisma } from '@prisma/client'
-import type PrismaTypes from '@pothos/plugin-prisma/generated'
+import type PrismaTypes from '@pothos-types'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
 type PothosSchemaBuilder = PothosSchemaTypes.SchemaBuilder<PothosSchemaTypes.ExtendDefaultTypes<{

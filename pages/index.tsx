@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function IndexPage() {
     return (
-      <div>Index</div>
+      <div className='bg-black font-old-english'>Index</div>
     )
 }

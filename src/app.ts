@@ -15,6 +15,7 @@ import { BuildUserQuery } from './modules/user/user.query'
 import { BuildProductQuery } from './modules/product/product.query'
 
 import { DeleteAllUsers } from './modules/user/user.service'
+import { NextRoutes } from './plugins/next/next.route'
 
 export type AppOptions = Partial<FastifyServerOptions>
 
@@ -63,13 +64,10 @@ async function buildApp(options: AppOptions = {}) {
       return { status: 'ok' }
     })
 
+    fastify.register(plugins.StaticPlugin)
+    
     fastify.register(plugins.NextPlugin)
-
-    await fastify.after()
-
-    fastify.next('/')
-    fastify.next('/hello')
-    fastify.next('/home')
+    fastify.register(NextRoutes)
   
     //await DeleteAllUsers(fastify.prisma)
 

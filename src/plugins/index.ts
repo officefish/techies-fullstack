@@ -10,7 +10,8 @@ import { CookiePlugin } from "./auth/cookie-plugin"
 import { SessionPlugin } from "./auth/session-plugin"
 import { MailPlugin } from "./mail-plugin"
 import { AuthPlugin } from "./auth/auth-plugin"
-import { NextPlugin } from "./next-plugin"
+import { NextPlugin } from "./next/next-plugin"
+import { StaticPlugin } from "./static-plugin"
 
 export { MinCrypto } from "./min-crypto-plugin"
 
@@ -27,6 +28,7 @@ export default {
     ShutdownPlugin,
     PothosPlugin,
     MercuriusPlugin,
+    StaticPlugin,
     NextPlugin
 }
 

@@ -1,0 +1,20 @@
+const path = require('node:path')
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  webpack: function (config, options) {    
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve.alias,
+        '@': path.resolve(__dirname, './src/'),
+        '@assets': path.resolve(__dirname, './src/assets/'),
+        '@components': path.resolve(__dirname, './src/components/'),
+      }
+    }
+    return config;
+  },
+}
+
+module.exports = nextConfig

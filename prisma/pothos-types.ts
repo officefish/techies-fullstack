@@ -1,5 +1,5 @@
 /* eslint-disable */
-import type { Prisma, User, Product } from "@prisma/client";
+import type { Prisma, User, Product, Session } from "@prisma/client";
 export default interface PrismaTypes {
     User: {
         Name: "User";
@@ -9,12 +9,18 @@ export default interface PrismaTypes {
         OrderBy: Prisma.UserOrderByWithRelationInput;
         WhereUnique: Prisma.UserWhereUniqueInput;
         Where: Prisma.UserWhereInput;
-        RelationName: "products";
-        ListRelations: "products";
+        Create: {};
+        Update: {};
+        RelationName: "products" | "sessions";
+        ListRelations: "products" | "sessions";
         Relations: {
             products: {
                 Shape: Product[];
-                Types: PrismaTypes["Product"];
+                Name: "Product";
+            };
+            sessions: {
+                Shape: Session[];
+                Name: "Session";
             };
         };
     };
@@ -26,12 +32,33 @@ export default interface PrismaTypes {
         OrderBy: Prisma.ProductOrderByWithRelationInput;
         WhereUnique: Prisma.ProductWhereUniqueInput;
         Where: Prisma.ProductWhereInput;
+        Create: {};
+        Update: {};
         RelationName: "owner";
         ListRelations: never;
         Relations: {
             owner: {
                 Shape: User;
-                Types: PrismaTypes["User"];
+                Name: "User";
+            };
+        };
+    };
+    Session: {
+        Name: "Session";
+        Shape: Session;
+        Include: Prisma.SessionInclude;
+        Select: Prisma.SessionSelect;
+        OrderBy: Prisma.SessionOrderByWithRelationInput;
+        WhereUnique: Prisma.SessionWhereUniqueInput;
+        Where: Prisma.SessionWhereInput;
+        Create: {};
+        Update: {};
+        RelationName: "user";
+        ListRelations: never;
+        Relations: {
+            user: {
+                Shape: User;
+                Name: "User";
             };
         };
     };

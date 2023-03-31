@@ -19,7 +19,6 @@ import {
     IsMemberHandler,
     UpdateRoleHandler
 } from './user.controller'
-import zodToJsonSchema from "zod-to-json-schema"
 
 declare module 'fastify' {
    
