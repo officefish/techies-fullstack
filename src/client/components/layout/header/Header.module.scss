@@ -1,0 +1,46 @@
+
+.header_container {
+    @apply fixed z-50 top-0 left-0 w-full
+    shadow-lg
+    shadow-gray-900
+    flex items-center justify-between p-4 h-16 bg-gray-900;
+}
+
+.header_description { 
+    @apply text-base text-gray-500 mt-2 ml-2 font-normal cursor-default;
+    span, a {
+        font-family: "Old English", serif;
+        //font-family: "Cormorant Garamond", serif;
+    }
+}
+
+.logo_wrapper {
+    @apply h-16 text-3xl bg-gray-900 cursor-pointer;
+}
+
+.logo_top {
+    font-family: "Old English", serif;
+    @apply bg-gray-900 text-gray-400 font-bold;
+}
+
+.logo_wrapper:hover .logo_top {
+    @apply text-cyan-300;
+}
+
+.logo_bottom {
+    font-family: "Old English", serif;
+    @apply bg-gradient-to-t from-gray-600 to-gray-400 font-bold;
+}
+
+.logo_wrapper:hover .logo_bottom {
+    @apply bg-gradient-to-b from-blue-900 to-cyan-300;
+}
+
+.header_navbar {
+    @apply flex items-center justify-center font-display text-gray-500 text-base mt-3;
+    font-family: "Old English", serif;
+}
+
+.header_offset {
+    @apply h-16;
+}

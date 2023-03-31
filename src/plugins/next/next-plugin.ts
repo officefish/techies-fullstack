@@ -5,7 +5,6 @@ import fp from 'fastify-plugin'
 import { FastifyReply } from "fastify/types/reply"
 import { FastifyRequest } from "fastify/types/request"
 
-
 // const nextJsProxyRequestHandler = function (request: FastifyRequest, reply: FastifyReply) {
 //     nextRequestHandler(proxyFastifyRawRequest(request), proxyFastifyRawReply(reply))
 // }

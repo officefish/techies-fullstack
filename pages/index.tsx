@@ -1,7 +1,9 @@
-import React from 'react'
+import Home from "@components/screens/home/home"
 
-export default function IndexPage() {
-    return (
-      <div className='bg-black font-old-english'>Index</div>
-    )
+export default function HomePage() {
+  return (
+    <Home />
+  )
 }
+
+

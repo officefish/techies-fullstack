@@ -27,6 +27,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@assets/*":["./src/client/assets/*"],
+      "@components/*":["./src/client/components/*"],
       "@pothos-types":["./prisma/pothos-types.ts"]
     },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
