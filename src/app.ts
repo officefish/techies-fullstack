@@ -33,6 +33,7 @@ async function buildApp(options: AppOptions = {}) {
     //fastify.register(plugins.ShutdownPlugin)
 
     fastify.register(plugins.DotEnvPlugin)
+    fastify.register(plugins.CorsPlugin)
     fastify.register(plugins.MinCryptoPlugin)
     fastify.register(plugins.MailPlugin)
     

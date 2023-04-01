@@ -12,11 +12,13 @@ import { MailPlugin } from "./mail-plugin"
 import { AuthPlugin } from "./auth/auth-plugin"
 import { NextPlugin } from "./next/next-plugin"
 import { StaticPlugin } from "./static-plugin"
+import { CorsPlugin } from "./cors-plugin"
 
 export { MinCrypto } from "./min-crypto-plugin"
 
 export default {
     DotEnvPlugin,
+    CorsPlugin,
     PrismaPlugin,
     MailPlugin,
     AuthPlugin,
