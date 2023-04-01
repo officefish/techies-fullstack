@@ -20,38 +20,13 @@ import { GetProtectedDataHandler,
   Login2FAHandler,
   LoginHandler,
   LogoutHandler,
+  RegisterHandler
 } from "./auth.controller"
 
 import { $ref } from "./auth.schema"
 
 async function routes(server:FastifyInstance) {
 
-  // // Add support for Cross Origin Resource Sharing.
-  // app.register(fastifyCors, {
-  //   credentials: true, // required to return cookies
-  //   origin: [
-  //     // origin of requests from UI;
-  //     // leading dot means to allow use in subdomains
-  //     /\.nodeauth\.dev$/,
-  //     'https://nodeauth.dev'
-  //   ]
-  // });
-
-  // Add support for setting and getting cookies.
-  // app.register(fastifyCookie, {
-  //   secret: process.env.COOKIE_SIGNATURE
-  // });
-
-   /*
-    // Normally these names are defined by Node.js.
-    // But when "type" is set to "module" in package.json, these go away.
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    // Serve static files from the "public" directory.
-    app.register(fastifyStatic, {
-      root: path.join(__dirname, 'public')
-    });
-    */
 
     /* Auth api */
     server.get('/', {
@@ -62,17 +37,31 @@ async function routes(server:FastifyInstance) {
       }
     }, (req, reply) => { reply.code(200).send({status:'ok'}) })
 
-    server.post('/login', {
+    server.post('/sign-in', {
       schema: {
         body: $ref('loginUserSchema'),
-        description: 'User login',
+        description: 'User sign in / log in',
         tags: ['auth'],
+        response: {
+          202: $ref('goodResponseSchema')
+        }
       }
     }, LoginHandler)
 
-    server.get('/logout', {
+    server.post('/sign-up', {
       schema: {
-        description: 'User logout',
+        body: $ref('registerUserSchema'),
+        description: 'User sign up / register',
+        tags: ['auth'],
+        response: {
+          202: $ref('goodResponseSchema')
+        }
+      }
+    }, RegisterHandler)
+
+    server.get('/sign-out', {
+      schema: {
+        description: 'User sign out / log out',
         tags: ['auth'],
       }
     }, LogoutHandler)

@@ -5,6 +5,9 @@ import { FastifyReply } from "fastify/types/reply"
 import { FastifyRequest } from "fastify/types/request"
 import { CookieOptions } from '@fastify/session'
 
+import { Role } from '@prisma/client'
+const roleEnum = z.nativeEnum(Role)
+
 const email = {
     email: z.string({
         required_error: 'Email is required',
@@ -17,15 +20,26 @@ const password = {
         invalid_type_error: 'Password must be a string',
     })
 }
-//const name = { name: z.string().optional() }
+const name = { name: z.string().optional() }
 //const id = { id: z.string() }
 
 const loginUserSchema = z.object({
     ...email,
     ...password,
 })
-const loginUserResponseSchema = z.object({
-    accessToken: z.string(),
+const userAcceptedResponseSchema = z.object({
+    ...email,
+    ...name,
+    id: z.string(),
+    isAutotificate: z.boolean(),
+    isVerified: z.boolean(),
+    role:roleEnum.optional()
+})
+
+const registerUserSchema = z.object({
+    ...email,
+    ...password,
+    ...name,
 })
 
 const verifyUserSchema = z.object({
@@ -34,7 +48,12 @@ const verifyUserSchema = z.object({
     token: z.string()
 })
 
+const goodResponseSchema = z.object({
+    status: z.string()
+})
+
 type LoginInput = z.infer<typeof loginUserSchema>
+type RegisterInput = z.infer<typeof registerUserSchema>
 type VerifyUserInput = z.infer<typeof verifyUserSchema>
 
 type CreateTokensInput = {
@@ -66,6 +85,7 @@ type SendVerifyEmailInput = {
 export { 
     type LoginInput,
     type VerifyUserInput,
+    type RegisterInput,
     type CreateCookieInput,
     type ClearCookieInput,
     type CreateTokensInput,
@@ -75,7 +95,9 @@ export {
 export const {schemas:AuthSchemas, $ref} = buildJsonSchemas({
     loginUserSchema,
     verifyUserSchema,
-    loginUserResponseSchema,
+    registerUserSchema,
+    userAcceptedResponseSchema,
+    goodResponseSchema
 }, {$id: 'AuthSchema'})
 
 

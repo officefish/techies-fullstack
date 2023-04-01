@@ -61,26 +61,7 @@ async function getCurrentUser(request:FastifyRequest, reply:FastifyReply) {
 async function createUser(request:FastifyRequest<{
     Body: CreateUserInput
   }>, reply:FastifyReply) {
-    const {email, password} = request.body
-    const saltLength = request.server.env.JWT_SALT_LENGTH
-    const bcrypt = request.server.bcrypt
-    const prisma = request.server.prisma
-  
-    try {
-      const salt = await service.GenerateSalt(bcrypt, saltLength)
-      const hashedPassword = await service.Hash(bcrypt, password, salt)
-  
-      // Insert a record into the "user" collection.
-      const data = { email, password:hashedPassword, salt, verified: false }
-      await userService.CreateUser(prisma, data)
-  
-      // After successfully creating a new user, automatically log in.
-      await authController.login(request, reply)
-  
-    } catch (e) {
-      console.error('createUser error:', e)
-      reply.code(500).send(e)
-    }
+    await authController.register(request, reply)
 }
 
 

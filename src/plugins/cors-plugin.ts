@@ -1,6 +1,15 @@
 import fp from 'fastify-plugin'
 import cors from '@fastify/cors'
 
+  // app.register(fastifyCors, {
+  //   credentials: true, // required to return cookies
+  //   origin: [
+  //     // origin of requests from UI;
+  //     // leading dot means to allow use in subdomains
+  //     /\.nodeauth\.dev$/,
+  //     'https://nodeauth.dev'
+  //   ]
+  // });
 
 const corsPlugin = fp(async (server) => {
 
@@ -27,7 +36,7 @@ const corsPlugin = fp(async (server) => {
         methods: ['GET', 'PUT', 'POST', 'DELETE']
    })
 
-   .ready((err) => {
+   .after((err) => {
         if (err) console.error(err)  
         server.log.info('Cors Plugin Installed.')
     })

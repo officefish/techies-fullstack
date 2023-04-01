@@ -1,18 +1,18 @@
 import { FastifyReply } from "fastify/types/reply"
 import { FastifyRequest } from "fastify/types/request"
-import { FastifyError } from "fastify"
-import { HookHandlerDoneFunction } from "fastify"
 
 import { 
   LoginInput,
   VerifyUserInput,
   CreateTokensInput,
-  SendVerifyEmailInput
+  RegisterInput,
 } from "./auth.schema"
 
 import service from '../../services'
 import userService from "../user/user.service"
 import { User } from "@prisma/client"
+
+import { Role } from "@prisma/client"
 
 
 async function getProtectedData(request:FastifyRequest, reply:FastifyReply) {
@@ -81,19 +81,21 @@ async function verifyUser(request:FastifyRequest<{
     const matches = token === emailToken
   
     if (!matches || Date.now() > +expires) {
-      reply.code(400).send({error: { message:'verify link expired'}})
+      reply.code(reply.codeStatus.GONE)
+        .send({error: { message:'Verify link expired'}})
       return
     }
   
     try {
-
       const prisma = request.server.prisma
-      const user = await userService.UpdateUser(prisma, {email, verified:true})
-      reply.code(200).send({verified: user.verified})
+      const role = Role.MEMBER
+      const user = await userService.UpdateUser(prisma, {email, role, verified:true})
+      reply.code(reply.codeStatus.ACCEPTED)
+        .send({verified: user.verified, role:role})
 
     } catch (e) {
-      console.error('verifyUser error:', e)
-      reply.code(500).send('error verifying user: ' + e)
+      reply.code(reply.codeStatus.UNPROCESSABLE_ENTITY)
+        .send({error: { message:'User update failed'}})
     }
 }
 
@@ -113,14 +115,15 @@ async function login(request:FastifyRequest<{
   const prisma = request.server.prisma
   const bcrypt = request.server.bcrypt
   try {
+     
       const user = await userService.GetUniqueUser(prisma, {email})
       const samePassword = await service.Compare(bcrypt, password, user?.password || '')
       if (user && samePassword) {
         // If the user has enabled two-factor authentication (2FA) ...
         // Don't login until a 2FA code is provided.
         if (user.secret) { 
-          reply.send({userId: user.id, status: '2FA'})
-
+          reply.code(reply.codeStatus.FORBIDDEN).send({userId: user.id, status: '2FA'})
+          return
         } else {
           // 2FA is not enabled for this account,
           // so create a new session for this user.
@@ -134,19 +137,45 @@ async function login(request:FastifyRequest<{
             await sendVerifyEmail(request, reply, email)
           }
 
-          const replyPayload = {
-            'access-token': reply.cookies['access-token'],
-            'verified': user.verified
-          }
-          reply.send(replyPayload)
+          reply.code(reply.codeStatus.ACCEPTED).send({status:'authenticated'})
         }
       } else {
         reply.code(reply.codeStatus.UNAUTHORIZED).send('invalid email or password')
       }
   } catch (e) {
-    console.error('login error:', e)
     reply.code(500).send(e)
   }
+}
+
+async function register(request:FastifyRequest<{
+  Body:RegisterInput
+}>, reply:FastifyReply) {
+    
+    const {email, password, name} = request.body
+    const saltLength = request.server.env.JWT_SALT_LENGTH
+    const bcrypt = request.server.bcrypt
+    const prisma = request.server.prisma
+  
+    try {
+      const salt = await service.GenerateSalt(bcrypt, saltLength)
+      const hashedPassword = await service.Hash(bcrypt, password, salt)
+  
+      // Insert a record into the "user" collection.
+      const data = { name, email, password:hashedPassword, salt, verified: false }
+      await userService.CreateUser(prisma, data)
+
+    } catch (e) {
+      reply.code(reply.codeStatus.CONFLICT).send(e)
+    }
+
+    try {
+      // After successfully creating a new user, automatically log in.
+      await login(request, reply)
+  
+    } catch (e) {
+      reply.code(reply.codeStatus.FORBIDDEN).send(e)
+    }
+
 }
 
 async function logout(request:FastifyRequest, reply:FastifyReply) {
@@ -255,6 +284,7 @@ export {
     authenticate as AuthenticateHandler,
     login as LoginHandler, 
     logout as LogoutHandler,
+    register as RegisterHandler,
     getProtectedData as GetProtectedDataHandler,
     getUnprotectedData as GetUnprotectedDataHandler,
     verifyUser as VerifyUserHandler,
@@ -264,5 +294,6 @@ export {
 
 export const authController = {
   login,
-  logout
+  logout,
+  register
 }
