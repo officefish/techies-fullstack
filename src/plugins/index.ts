@@ -13,10 +13,12 @@ import { AuthPlugin } from "./auth/auth-plugin"
 import { NextPlugin } from "./next/next-plugin"
 import { StaticPlugin } from "./static-plugin"
 import { CorsPlugin } from "./cors-plugin"
+import { HttpStatusPlugin } from "./http-status-plugin"
 
 export { MinCrypto } from "./min-crypto-plugin"
 
 export default {
+    HttpStatusPlugin,
     DotEnvPlugin,
     CorsPlugin,
     PrismaPlugin,

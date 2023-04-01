@@ -9,8 +9,8 @@ const nextConfig = {
       alias: {
         ...config.resolve.alias,
         '@': path.resolve(__dirname, './src/'),
-        '@assets': path.resolve(__dirname, './src/assets/'),
-        '@components': path.resolve(__dirname, './src/components/'),
+        '@assets': path.resolve(__dirname, './src/client/assets/'),
+        '@components': path.resolve(__dirname, './src/client/components/'),
       }
     }
     return config;

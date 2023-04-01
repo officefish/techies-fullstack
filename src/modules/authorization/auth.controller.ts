@@ -141,7 +141,7 @@ async function login(request:FastifyRequest<{
           reply.send(replyPayload)
         }
     } else {
-      reply.code(401).send('invalid email or password')
+      reply.code(reply.codeStatus.NO_CONTENT).send('invalid email or password')
     }
   } catch (e) {
     console.error('login error:', e)
