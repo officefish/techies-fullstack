@@ -1,13 +1,18 @@
 import { FC } from "react"
 import { useForm } from 'react-hook-form'
 
-import Link from "next/link"
-
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 const validationSchema = z.object({
-    email: z.string({
+    name: z.string({
+        required_error: "Name is required",
+        invalid_type_error: "Name must be a string",
+    })
+        .min(7, {message: "Must be 7 or more characters long"})
+        .max(24, {message: "Must be 24 or less characters long"})
+
+    , email: z.string({
         required_error: "Email is required",
         invalid_type_error: "Email must be a string",
     })
@@ -22,11 +27,12 @@ const validationSchema = z.object({
 
 type Props = {
     onSubmit: (data: any) => void
+    serverError: Error | undefined
 }
 
-const LogInForm: FC<any> = (props: Props) => {
+const SignUpForm: FC<any> = (props: Props) => {
 
-    const {onSubmit} = props
+    const {serverError, onSubmit} = props
 
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: zodResolver(validationSchema),
@@ -34,14 +40,26 @@ const LogInForm: FC<any> = (props: Props) => {
 
     return (
         <div className="dev_form">
-            <h2>Log In</h2>
+            <h2>Sign Up</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="mb-4">
+                    <label htmlFor="name">
+                        Nickname
+                    </label>
+                    <input {...register('name')} 
+                    id="name" type="text" placeholder="any name" 
+                    className={`
+                    ${errors.name && 'invalid'}
+                    `}/>
+                    {errors.name?.message && 
+                        <p>{errors.name?.message?.toString()}</p>}
+                </div>
                 <div className="mb-4">
                     <label htmlFor="email">
                         Email
                     </label>
                     <input {...register('email')} 
-                    id="email" type="text" placeholder="**@**.***" 
+                    id="email" type="text" placeholder="valid email" 
                     className={`
                     ${errors.email && 'invalid'}
                     `}/>
@@ -53,7 +71,7 @@ const LogInForm: FC<any> = (props: Props) => {
                         Password
                     </label>
                     <input {...register('password')} 
-                    id="password" type="text" placeholder="ლ(ヘᴥヘ)ლ"
+                    id="password" type="text" placeholder="any password"
                     className={`
                         ${errors.password && 'invalid'}
                     `}/>
@@ -62,23 +80,17 @@ const LogInForm: FC<any> = (props: Props) => {
                 </div>
                 <div className="submit_wrapper">
                     <button type="submit">
-                        Log In
+                        Sign Up
                     </button>
                 </div>
-                <div className="flex items-center justify-between">
-                <Link className="link" href="/sign-in">
-                    No Account?
-                </Link>        
-                <Link className="link" href="#">
-                    Forgot Password?
-                </Link>
-                </div>
             </form>
-            <p className="copyright"></p>   
+            <p className="copyright"></p> 
+            {serverError?.message && 
+                <p className="server_error">{serverError.message?.toString()}</p>}    
         </div>
  
            
   )
 }
 
-export default LogInForm
+export default SignUpForm

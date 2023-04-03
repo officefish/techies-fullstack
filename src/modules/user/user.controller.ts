@@ -42,19 +42,29 @@ async function getUniqueUser(request:FastifyRequest<{
       const user = await userService.GetUniqueUser(prisma, {email, id})
       return user
     } catch(e) {
-      reply.code(400).send({error:e})
+      reply.code(reply.codeStatus.CONFLICT).send(e)
     }
   
 }
 
 async function getCurrentUser(request:FastifyRequest, reply:FastifyReply) {
-    const id = (request.user as UserPayload).id
+
+    const id = request.session.userId
     const prisma = request.server.prisma
+    
     try {
       const user = await userService.GetUniqueUser(prisma, {id})
-      return user
+      const payload = {
+        id: user?.id,
+        email: user?.email,
+        name: user?.name,
+        verified: user?.verified,
+        authenticated: true,
+        role: user?.role
+      }
+      reply.code(reply.codeStatus.CREATED).send(payload)
     } catch(e) {
-      reply.code(400).send({error:e})      
+      reply.code(reply.codeStatus.CONFLICT).send(e)    
     }
 }
 
@@ -147,15 +157,9 @@ async function deleteCurrentUser(request:FastifyRequest, reply:FastifyReply) {
   try {
       // This verifies that the user is currently authenticated
       // and gets their email.
-      const user = await getCurrentUser(request, reply)
-      if (user) {
-        const userId = user.id
-        await userService.DeleteUniqueUserById(prisma, userId)
-        await authController.logout(request, reply)
-
-      } else {
-        reply.code(400).send({error: { message:'Error deleting user. User not found.'}})
-      }
+      const id = (request.user as UserPayload).id      
+      await userService.DeleteUniqueUserById(prisma, id)
+      await authController.logout(request, reply)
     } catch (e) {
         reply.code(400).send({error:e})
     }

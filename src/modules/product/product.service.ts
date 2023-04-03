@@ -3,7 +3,6 @@ import { CreateProductInput } from './product.schema'
 
 async function createProduct(
     prisma: PrismaClient, data: CreateProductInput & {ownerId: string}) {
-        console.log(data)
     return prisma.product.create({
         data,
     })

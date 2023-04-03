@@ -13,11 +13,11 @@ import { NextServer } from "next/dist/server/next"
 
 async function routes(server:FastifyInstance) {
     server.next('/')
-    server.next('/hello')
     server.next('/home')
+    server.next('/me')
 
     server.next(`/log-in`, async (app:NextServer, req:FastifyRequest, reply:FastifyReply) => {   
-        // here we potentialy can accept fastify instance to req.raw
+        // here we potentialy can forward fastify instance to req.raw
         //req.raw.server = req.server
         await app.render(req.raw, reply.raw, '/log-in', {})
         reply.hijack()

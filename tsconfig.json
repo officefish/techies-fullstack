@@ -28,6 +28,8 @@
       "@/*": ["./src/*"],
       "@assets/*":["./src/client/assets/*"],
       "@components/*":["./src/client/components/*"],
+      "@services/*":["./src/client/services/*"],
+      "@models/*":["./src/client/models/*"],
       "@pothos-types":["./prisma/pothos-types.ts"]
     },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

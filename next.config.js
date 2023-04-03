@@ -11,9 +11,11 @@ const nextConfig = {
         '@': path.resolve(__dirname, './src/'),
         '@assets': path.resolve(__dirname, './src/client/assets/'),
         '@components': path.resolve(__dirname, './src/client/components/'),
+        '@services': path.resolve(__dirname, './src/client/services/'),
+        '@models': path.resolve(__dirname, './src/client/models/')
       }
     }
-    return config;
+    return config
   },
 }
 

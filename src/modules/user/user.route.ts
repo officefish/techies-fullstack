@@ -59,7 +59,7 @@ async function routes(server:FastifyInstance) {
         }
     }, GetManyUsersHandler)
       
-    server.get('/current', {
+    server.get('/me', {
         preHandler: [server.authenticate],
         schema: {
             response: {

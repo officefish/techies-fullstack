@@ -31,8 +31,8 @@ const userAcceptedResponseSchema = z.object({
     ...email,
     ...name,
     id: z.string(),
-    isAutotificate: z.boolean(),
-    isVerified: z.boolean(),
+    autenticated: z.boolean(),
+    verified: z.boolean(),
     role:roleEnum.optional()
 })
 

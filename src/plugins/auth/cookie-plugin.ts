@@ -29,10 +29,11 @@ declare module 'fastify' {
 const cookiePlugin = fp(async (server) => {
     
     const cookieOptions = {
-        domain: server.env.ROOT_DOMAIN,
+        domain: 'localhost',
         httpOnly: server.env.COOKIE_HTTPONLY,
         path: server.env.COOKIE_PATH,
-        secure: server.env.COOKIE_SECURE 
+        secure: server.env.COOKIE_SECURE,
+        sameSite: 'lax'
     }
 
     server.decorate('cookieOptions', cookieOptions)

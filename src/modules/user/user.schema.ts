@@ -63,6 +63,9 @@ const userResponseSchema = z.object({
     ...id,
     ...name,
     ...email,
+    verified: z.boolean(),
+    authenticated: z.boolean(),
+    role:roleEnum.optional()
 })
 
 const changedPasswordSchema = z.object({

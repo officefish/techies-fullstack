@@ -53,7 +53,12 @@ async function authenticate(request:FastifyRequest, reply:FastifyReply) {
       try {
         const refreshToken = request.cookies['refresh-token'] || ""
         await service.Verify(jwt, refreshToken)
+      } catch (e) {
+        reply.code(reply.codeStatus.CONFLICT)
+          .send({error: { message:'Refresh token is invalid.'}})
+      }
 
+      try {
         const userId = request.session.userId || ""
         const userRole = request.session.userRole
         const {sessionToken} =  await service.RegenerateSession({request, reply, userId, userRole})
@@ -61,8 +66,8 @@ async function authenticate(request:FastifyRequest, reply:FastifyReply) {
 
         // maybe need to send verify email one more time?
       } catch (e) {
-        //console.error(e)
-        reply.code(400).send({error: { message:'Access token required'}})
+        reply.code(reply.codeStatus.NOT_ACCEPTABLE)
+          .send({error: { message:'Error occurs with regenerate session.'}})
       }
   }
 }
@@ -131,6 +136,7 @@ async function login(request:FastifyRequest<{
           const userId = user.id
           const userRole = user.role
           const {sessionToken} = await service.RegenerateSession({request, reply, userId, userRole})
+
           await createTokenCookies({ userId, sessionToken, request, reply})
           
           if (!user.verified) {
@@ -140,7 +146,7 @@ async function login(request:FastifyRequest<{
           reply.code(reply.codeStatus.ACCEPTED).send({status:'authenticated'})
         }
       } else {
-        reply.code(reply.codeStatus.UNAUTHORIZED).send('invalid email or password')
+        reply.code(reply.codeStatus.UNAUTHORIZED).send({error:{ message:'invalid email or password'}})
       }
   } catch (e) {
     reply.code(500).send(e)
