@@ -12,8 +12,7 @@ async function createProduct(
     const prisma = request.server.prisma
     const user = request.user as UserPayload
     const ownerId = user.id//userIdFromRequest(request, reply)
-    console.log(request)
-    console.log(ownerId)
+
 
     const product = await CreateProductService(
         prisma, { 
