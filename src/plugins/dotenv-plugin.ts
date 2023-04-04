@@ -1,5 +1,12 @@
 import fastifyEnv from "@fastify/env"
+import { FastifyBaseLogger } from "fastify"
 import fp from 'fastify-plugin'
+
+// declare module 'fastify' {
+//   interface FastifyBaseLogger {
+//     init: any
+//   }
+// }
 
 const schema = {
   type: 'object',
@@ -168,6 +175,8 @@ declare module 'fastify' {
     }
   }
 
+  
+
 const dotEnvPlugin = fp(async (server) => {
 
     const options = {
@@ -183,6 +192,7 @@ const dotEnvPlugin = fp(async (server) => {
     })
     
     //await server.after()
+    
     server.log.info('DotEnv Plugin Installed.')
 })
 

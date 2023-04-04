@@ -17,6 +17,7 @@ const Profile: FC = (props: Props) => {
                   <p>{user.email}</p> 
                   <p>{user.id}</p> 
                   <p>{user.authenticated.toString()}</p>  
+                  <p>{user.role}</p>
                 </div>
               }
             </div>   

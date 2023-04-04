@@ -9,8 +9,7 @@
 .header_description { 
     @apply text-base text-gray-500 mt-2 ml-2 font-normal cursor-default;
     span, a {
-        font-family: "Old English", serif;
-        //font-family: "Cormorant Garamond", serif;
+        @apply font-old-english;
     }
 }
 
@@ -19,8 +18,7 @@
 }
 
 .logo_top {
-    font-family: "Old English", serif;
-    @apply bg-gray-900 text-gray-400 font-bold;
+    @apply bg-gray-900 text-gray-400 font-bold font-old-english;
 }
 
 .logo_wrapper:hover .logo_top {
@@ -28,8 +26,7 @@
 }
 
 .logo_bottom {
-    font-family: "Old English", serif;
-    @apply bg-gradient-to-t from-gray-600 to-gray-400 font-bold;
+    @apply font-old-english bg-gradient-to-t from-gray-600 to-gray-400 font-bold;
 }
 
 .logo_wrapper:hover .logo_bottom {
@@ -37,8 +34,7 @@
 }
 
 .header_navbar {
-    @apply flex items-center justify-center font-display text-gray-500 text-base mt-3;
-    font-family: "Old English", serif;
+    @apply flex items-center justify-center font-old-english text-gray-500 text-base mt-3;
 }
 
 .header_offset {

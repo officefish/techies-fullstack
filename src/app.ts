@@ -72,7 +72,7 @@ async function buildApp(options: AppOptions = {}) {
     fastify.register(NextRoutes)
   
     //await DeleteAllUsers(fastify.prisma)
-
+    await fastify.after()
     return fastify
 }
 

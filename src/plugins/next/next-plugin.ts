@@ -22,14 +22,15 @@ const nextPlugin = fp(async (server) => {
             return app.getRequestHandler()(req.raw, reply.raw).then(() => {
                 reply.hijack()
             })
-        })
-
-        server.log.info('Next Plugin Installed.')
+        }) 
     })
     /* block hotreloading (used only for dev) */
     server.get(`${process.env.BASE_PATH || ''}/_next/webpack-hmr`, async (req, reply) => {
         reply.status(200).send('ok')
     })
+
+    server.log.info('Next Plugin Installed.') 
+    
 })
 
 export { nextPlugin as NextPlugin }
