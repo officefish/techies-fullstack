@@ -1,5 +1,4 @@
-import useSWR, { SWRConfiguration, SWRResponse } from 'swr'
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
+import axios from 'axios'
 
 import { useState } from 'react'
 import { useRouter } from "next/router"
@@ -47,7 +46,7 @@ export function useAxiosPostRawDataThanRedirect ({
 }
 
 
-export function useAxiosPostRawData ({
+export function useAxios_POST_RawData<T> ({
     protocol = 'http',
     host = HOST,
     port = PORT,
@@ -60,14 +59,17 @@ export function useAxiosPostRawData ({
         withCredentials: true
 }} = {}) {
 
+    const [serverError, setServerError] = useState<Error | undefined>(undefined)
+    const [data, setData] = useState<T | undefined>(undefined)
+
     const caller = async (input: any) => {
         
         const params = JSON.stringify({...input})
         const url = `${protocol}://${host}:${port}/${api}/${route}`
         return await axios
             .post(url, params, options)
-                .then(response => response.data)
-                .catch(error => error) 
+                .then(response => setData(response.data))
+                .catch(error => setServerError(error)) 
     } 
 
     const onSubmit = async (data:any) => {
@@ -75,7 +77,7 @@ export function useAxiosPostRawData ({
         return response
     }
 
-    return {onSubmit}
+    return {onSubmit, data, serverError}
 }
 
 export function useAxiosGet ({
