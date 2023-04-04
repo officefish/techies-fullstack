@@ -5,8 +5,10 @@ import { FastifyReply } from "fastify/types/reply"
 import { FastifyRequest } from "fastify/types/request"
 import { CookieOptions } from '@fastify/session'
 
+
 import { Role } from '@prisma/client'
 const roleEnum = z.nativeEnum(Role)
+
 
 const email = {
     email: z.string({
@@ -21,18 +23,18 @@ const password = {
     })
 }
 const name = { name: z.string().optional() }
-//const id = { id: z.string() }
+const id = { id: z.string() }
 
 const loginUserSchema = z.object({
     ...email,
     ...password,
 })
 const userAcceptedResponseSchema = z.object({
-    ...email,
+    ...id,
     ...name,
-    id: z.string(),
-    autenticated: z.boolean(),
+    ...email,
     verified: z.boolean(),
+    authenticated: z.boolean(),
     role:roleEnum.optional()
 })
 

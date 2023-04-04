@@ -59,6 +59,7 @@ const createUserSchema = z.object({
     ...password,
     ...name,
 })
+
 const userResponseSchema = z.object({
     ...id,
     ...name,

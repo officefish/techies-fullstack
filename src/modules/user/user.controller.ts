@@ -51,6 +51,11 @@ async function getCurrentUser(request:FastifyRequest, reply:FastifyReply) {
 
     const id = request.session.userId
     const prisma = request.server.prisma
+
+    if (!id) {
+      reply.code(reply.codeStatus.FORBIDDEN).send({error: {message:'Guest session. User not athorized.'}})
+      return
+    }
     
     try {
       const user = await userService.GetUniqueUser(prisma, {id})
@@ -62,7 +67,8 @@ async function getCurrentUser(request:FastifyRequest, reply:FastifyReply) {
         authenticated: true,
         role: user?.role
       }
-      reply.code(reply.codeStatus.CREATED).send(payload)
+      reply.code(reply.codeStatus.ACCEPTED).send(payload)
+
     } catch(e) {
       reply.code(reply.codeStatus.CONFLICT).send(e)    
     }

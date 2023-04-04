@@ -43,7 +43,7 @@ async function routes(server:FastifyInstance) {
         description: 'User sign in / log in',
         tags: ['auth'],
         response: {
-          202: $ref('goodResponseSchema')
+          202: $ref('userAcceptedResponseSchema')
         }
       }
     }, LoginHandler)
@@ -54,7 +54,7 @@ async function routes(server:FastifyInstance) {
         description: 'User sign up / register',
         tags: ['auth'],
         response: {
-          202: $ref('goodResponseSchema')
+          202: $ref('userAcceptedResponseSchema')
         }
       }
     }, RegisterHandler)
