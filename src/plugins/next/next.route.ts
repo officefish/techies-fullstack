@@ -13,7 +13,6 @@ import { NextServer } from "next/dist/server/next"
 
 async function routes(server:FastifyInstance) {
     server.next('/')
-    server.next('/home')
     server.next('/me')
 
     server.next(`/log-in`, async (app:NextServer, req:FastifyRequest, reply:FastifyReply) => {   

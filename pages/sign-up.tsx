@@ -1,19 +1,20 @@
-import SignIn from "@components/screens/auth/sign-up"
-//import { GetServerSideProps } from 'next'
-import { NextPage } from "next"
+import SignUp from "@components/screens/auth/sign-up"
+import { NextPageWithLayout } from "@/client/utilities/layout.utilite"
+import Layout from "@/client/components/layout/Layout"
 
-type SignUpContextInput = {}
-
-const SignUpPage: NextPage<{data: SignUpContextInput}> = ({ data }) => {
+const SignUpPage: NextPageWithLayout = () => {
   return (
-    <SignIn />
+    <SignUp />
+  )
+}
+export default SignUpPage
+
+SignUpPage.getLayout = function getLayout(page: React.ReactElement) {
+  return (
+    <Layout title="Sign In.">
+      {page}
+    </Layout>
   )
 }
 
-export default SignUpPage
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {  
-//   console.log(context)
-//   const data = {}
-//   return { props: { data } }
-// }

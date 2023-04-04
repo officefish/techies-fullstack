@@ -64,7 +64,6 @@ async function authenticate(request:FastifyRequest, reply:FastifyReply) {
         const {sessionToken} =  await service.RegenerateSession({request, reply, userId, userRole})
         await createTokenCookies({ userId, sessionToken, request, reply})
 
-        // maybe need to send verify email one more time?
       } catch (e) {
         reply.code(reply.codeStatus.NOT_ACCEPTABLE)
           .send({error: { message:'Error occurs with regenerate session.'}})

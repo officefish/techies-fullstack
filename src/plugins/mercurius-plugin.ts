@@ -4,9 +4,6 @@ import {
     FastifyRequest,
   } from 'fastify'
 import mercurius from 'mercurius'
-import path from 'path'
-import fs from 'fs'
-import { printSchema, lexicographicSortSchema } from 'graphql'
 import { PrismaClient } from '@prisma/client'
 
 interface Context {

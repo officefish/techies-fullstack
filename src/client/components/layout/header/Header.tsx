@@ -2,13 +2,17 @@ import Link from "next/link"
 import { FC } from "react"
 
 import styles from './Header.module.scss'
+import { OldEnglish } from "@assets/fonts"
 import HeaderNavigation from "./HeaderNavigation"
 import Logo from "./Logo"
 
 const Header:FC = () => {
     return( 
     <>
-        <header className={styles.header_container}>
+        <header className={`
+            ${styles.header_container} 
+            ${OldEnglish.className}
+        `}>
             <div className='flex items-center justify-end'>
                 <Logo />
                 <div className={styles.header_description}>

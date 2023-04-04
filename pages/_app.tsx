@@ -1,25 +1,19 @@
 import '@assets/scss/globals.scss'
 import type { AppProps } from 'next/app'
-
 import localFont from 'next/font/local'
+import { NextPageWithLayout } from '@utilities/layout.utilite'
 
-const oldEnglish = localFont({ src: [
-  {
-    path: '../public/fonts/old-english/EngraversOldEnglish-Med.otf',
-    weight: '400',
-    style: 'normal',
-  },
-  {
-    path: '../public/fonts/old-english/EngraversOldEnglish-Bd.otf',
-    weight: '400',
-    style: 'bold',
-  }
-], variable: '--font-old-english' })
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-  <main className={oldEnglish.className}>
-    <div>Here  I am</div>
-    <Component {...pageProps} />
-  </main>)
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  // Use the layout defined at the page level, if available
+  const getLayout = Component.getLayout ?? ((page) => page)
+  return getLayout(
+    <main>
+        <Component {...pageProps} />
+    </main>)
 }

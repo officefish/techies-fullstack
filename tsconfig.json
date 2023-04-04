@@ -30,6 +30,7 @@
       "@components/*":["./src/client/components/*"],
       "@services/*":["./src/client/services/*"],
       "@models/*":["./src/client/models/*"],
+      "@utilities/*":["./src/client/utilities/*"],
       "@pothos-types":["./prisma/pothos-types.ts"]
     },
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
