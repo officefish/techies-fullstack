@@ -1,7 +1,7 @@
 import '@assets/scss/globals.scss'
 import type { AppProps } from 'next/app'
 import localFont from 'next/font/local'
-import { NextPageWithLayout } from '@utilities/layout.utilite'
+import { NextPageWithLayout } from '@utilities/layout.types'
 
 
 

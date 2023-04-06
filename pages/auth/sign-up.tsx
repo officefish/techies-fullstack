@@ -1,6 +1,6 @@
 import SignUp from "@components/screens/auth/sign-up"
-import { NextPageWithLayout } from "@/client/utilities/layout.utilite"
-import Layout from "@/client/components/layout/Layout"
+import { NextPageWithLayout } from "@utilities/layout.types"
+import Layout from "@components/layout/Layout"
 
 const SignUpPage: NextPageWithLayout = () => {
   return (

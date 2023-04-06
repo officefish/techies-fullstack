@@ -15,13 +15,14 @@ async function routes(server:FastifyInstance) {
     server.next('/')
     server.next('/me')
 
-    server.next(`/log-in`, async (app:NextServer, req:FastifyRequest, reply:FastifyReply) => {   
+    server.next(`/auth/log-in`, async (app:NextServer, req:FastifyRequest, reply:FastifyReply) => {   
         // here we potentialy can forward fastify instance to req.raw
         //req.raw.server = req.server
         await app.render(req.raw, reply.raw, '/log-in', {})
         reply.hijack()
     })
-    server.next(`/sign-in`)
+    server.next(`/auth/sign-in`)
+    server.next('/auth/forgot-password')
 }
 
 export { routes as NextRoutes } 

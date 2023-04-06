@@ -13,12 +13,13 @@
     "dev:pretty": "npm run dev | pino-pretty",
     "start:prod": "cross-env NODE_ENV=production node build/index",
     "start": "node build/index",
+    "clean:next": "rmdir /s .next",
     "clean:dev": "rmdir /s build",
-    "restart": "npm -s run clean:dev && npm -s rum next:build && npm -s run dev:build && npm -s run start",
-    "clean": "rm -rf dist",
-    "build": "npm -s run clean && npm -s run generate && tsc",
-    "generate": "npm -s run generate:prisma",
+    "clean": "npm -s run clean:dev && npm -s rum clean:next",
+    "build": "npm -s rum next:build && npm -s run dev:build && npm -s run start",
     "generate:prisma": "prisma generate",
+    "generate": "npm -s run generate:prisma",
+    "build:complete":"npm -s rum clean && npm -s rum generate && npm -s rum build",
     "db:push": "prisma db push --preview-feature",
     "format": "npx prettier --write './**/*.{ts,md}'",
     "tap-test": "tap --reporter=list --watch",
@@ -90,7 +91,6 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.9",
     "swr": "^2.1.2",
-    "zod": "^3.21.4",
-    "zod-to-json-schema": "^3.20.4"
+    "zod": "^3.21.4"
   }
 }

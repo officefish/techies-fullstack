@@ -75,7 +75,7 @@ const changedPasswordSchema = z.object({
 
 const forgotPasswordSchema = z.object({
     ...email
-})
+}) 
 
 const resetPasswordSchema = z.object({
     ...resetPassword
@@ -124,4 +124,4 @@ export const {schemas:UserSchemas, $ref} = buildJsonSchemas({
     changedPasswordSchema,
     resetPasswordSchema,
     updateRoleSchema
-}, {$id: 'UserSchema'})
+}, {$id: 'UserSchemas'})

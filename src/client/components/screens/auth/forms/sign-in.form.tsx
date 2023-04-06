@@ -1,41 +1,48 @@
 import { FC } from "react"
 import { useForm } from 'react-hook-form'
-
 import Link from "next/link"
-
 import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import { useSignIn } from "@services/auth.service"
+import { GetSignInStatic } from "./ssr"
+import { FormProps } from "@utilities/form.types"
 
-const validationSchema = z.object({
-    email: z.string({
-        required_error: "Email is required",
-        invalid_type_error: "Email must be a string",
-    })
-        .email({ message: "Invalid email address" })
-    
-    , password: z.string({
-        required_error: "Password is required",
-        invalid_type_error: "Password must be a string",
-    })
-        .min(8, { message: "Must be 8 or more characters long" })
-})
 
-type Props = {
-    onSubmit: (data: any) => void
-    serverError: Error | undefined
-}
+//import {z} from 'zod'
 
-const SignInForm: FC<any> = (props: Props) => {
+// const email = {
+//     email: z.string({
+//         required_error: 'Email is required',
+//         invalid_type_error: 'Email must be a string',
+//     })
+//     .email({ message: "Invalid email address" })
+// }
+// const password = {
+//     password: z.string({
+//         required_error: 'Password is required',
+//         invalid_type_error: 'Password must be a string',
+//     })
+//     .min(8, { message: "Must be 8 or more characters long" })
+// }
 
-    const {serverError, onSubmit} = props
+// const loginUserSchema = z.object({
+//     ...email,
+//     ...password,
+// })
+
+const SignInForm: FC<FormProps> = ({schema} : FormProps) => {
+    const title = 'Sign In'
+
+    console.log(schema)
+
+    const {onSubmit, serverError} = useSignIn()
 
     const { register, handleSubmit, formState: { errors }, } = useForm({
-        resolver: zodResolver(validationSchema),
+        resolver: zodResolver(schema),
     })
 
     return (
         <div className="dev_form">
-            <h2>Sign In</h2>
+            <h2>{title}</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                     <label htmlFor="email">
@@ -63,14 +70,14 @@ const SignInForm: FC<any> = (props: Props) => {
                 </div>
                 <div className="submit_wrapper">
                     <button type="submit">
-                        Sign In
+                        {title}
                     </button>
                 </div>
                 <div className="flex items-center justify-between">
-                <Link className="link" href="/sign-up">
+                <Link className="link" href="/auth/sign-up">
                     No Account?
                 </Link>        
-                <Link className="link" href="#">
+                <Link className="link" href="/auth/forgot-password">
                     Forgot Password?
                 </Link>
                 </div>
@@ -86,3 +93,4 @@ const SignInForm: FC<any> = (props: Props) => {
 }
 
 export default SignInForm
+export const getStaticProps = GetSignInStatic()

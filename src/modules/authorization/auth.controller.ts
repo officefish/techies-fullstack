@@ -272,6 +272,8 @@ async function sendVerifyEmail(request:FastifyRequest, reply:FastifyReply, email
     }
 }
 
+
+
 async function updateSession(request:FastifyRequest, reply:FastifyReply, user:User) {
   //const tokenLength = request.server.env.SESSION_TOKEN_LENGTH
   //const bcrypt = request.server.bcrypt

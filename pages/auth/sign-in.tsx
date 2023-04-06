@@ -1,6 +1,6 @@
 import SignIn from "@components/screens/auth/sign-in"
-import { NextPageWithLayout } from "@/client/utilities/layout.utilite"
-import Layout from "@/client/components/layout/Layout"
+import { NextPageWithLayout } from "@utilities/layout.types"
+import Layout from "@components/layout/Layout"
 
 const SignInPage: NextPageWithLayout = () => {
   return (

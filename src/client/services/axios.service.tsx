@@ -20,7 +20,7 @@ export function useAxiosPostRawDataThanRedirect ({
         withCredentials: true
 }} = {}) {
 
-    const caller = async (input: any) => {
+    const request = async (input: any) => {
         
         const params = JSON.stringify({...input})
         const url = `${protocol}://${host}:${port}/${api}/${route}`
@@ -34,7 +34,7 @@ export function useAxiosPostRawDataThanRedirect ({
     const router = useRouter()
 
     const onSubmit = async (data:any) => {
-        const response = await caller(data)
+        const response = await request(data)
         if (response instanceof Error) {
             setServerError(response)
         } else {
@@ -62,7 +62,7 @@ export function useAxios_POST_RawData<T> ({
     const [serverError, setServerError] = useState<Error | undefined>(undefined)
     const [data, setData] = useState<T | undefined>(undefined)
 
-    const caller = async (input: any) => {
+    const request = async (input: any) => {
         
         const params = JSON.stringify({...input})
         const url = `${protocol}://${host}:${port}/${api}/${route}`
@@ -73,7 +73,7 @@ export function useAxios_POST_RawData<T> ({
     } 
 
     const onSubmit = async (data:any) => {
-        const response = await caller(data)
+        const response = await request(data)
         return response
     }
 
@@ -93,7 +93,9 @@ export function useAxiosGet ({
         withCredentials: true
 }} = {}) {
 
-    const caller = async () => {
+    const [serverError, setServerError] = useState<Error | undefined>(undefined)
+
+    const request = async () => {
         
         const url = `${protocol}://${host}:${port}/${api}/${route}`
         return await axios
@@ -103,11 +105,14 @@ export function useAxiosGet ({
     } 
 
     const onSubmit = async (data:any) => {
-        const response = await caller()
+        const response = await request()
+        if (response instanceof Error) {
+            setServerError(response)
+        } 
         return response
     }
 
-    return {onSubmit}
+    return {onSubmit, serverError}
 }
 
 export function useAxiosFetcher_GET ({
@@ -134,7 +139,84 @@ export function useAxiosFetcher_GET ({
   return {fetcher}
 }
 
+export function useAxios_GET_QueryParams_Redirect<T = {}> ({
+    protocol = 'http',
+    host = HOST,
+    port = PORT,
+    api = 'api',
+    route = 'me',
+    redirect = 'me',
+    headers = {
+        'Content-Type': 'application/json',
+    },
+    withCredentials = true
+} = {}) {
 
+    const caller = async (input: T) => {
+
+        console.log(input)
+        
+        const url = `${protocol}://${host}:${port}/${api}/${route}/{${input}}`
+        return await axios
+            .get(url, {
+                headers: {...headers},
+                withCredentials: withCredentials
+            })
+                .then(response => response.data)
+                .catch(error => error) 
+    } 
+
+    const [serverError, setServerError] = useState<Error | undefined>(undefined)
+    const router = useRouter()
+
+    const onSubmit = async (data:T) => {
+        const response = await caller(data)
+        if (response instanceof Error) {
+            setServerError(response)
+        } else {
+            router.push(`/${redirect}`)
+        }
+    }
+
+    return {onSubmit, serverError}
+}
+
+export function useAxios_GET_QueryParams<T = {}> ({
+    protocol = 'http',
+    host = HOST,
+    port = PORT,
+    api = 'api',
+    route = 'me',
+    headers = {
+        'Content-Type': 'application/json',
+    },
+    withCredentials = true
+} = {}) {
+
+    const request = async (input: T) => {
+        const url = `${protocol}://${host}:${port}/${api}/${route}/{${input}}`
+        return await axios
+            .get(url, {
+                headers: {...headers},
+                withCredentials: withCredentials
+            })
+                .then(response => response.data)
+                .catch(error => error) 
+    } 
+
+    const [serverError, setServerError] = useState<Error | undefined>(undefined)
+    const [reply, setReply] = useState(null)
+
+    const onSubmit = async (data:T) => {
+        const response = await request(data)
+        response instanceof Error
+            ? setServerError(response)
+            : setReply(response)
+        
+    }
+
+    return {onSubmit, reply, serverError}
+}
 
 
 // export type GetRequest = AxiosRequestConfig | null

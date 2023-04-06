@@ -1,46 +1,58 @@
 import { FC } from "react"
 import { useForm } from 'react-hook-form'
-
 import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+import { FormProps } from "@utilities/form.types"
+import {useSignUp} from '@services/auth.service'
+import { GetSignUpStatic } from "./ssr"
+import { InferGetStaticPropsType } from 'next'
+import { GetStaticProps } from "next"
 
-const validationSchema = z.object({
-    name: z.string({
-        required_error: "Name is required",
-        invalid_type_error: "Name must be a string",
-    })
-        .min(7, {message: "Must be 7 or more characters long"})
-        .max(24, {message: "Must be 24 or less characters long"})
 
-    , email: z.string({
-        required_error: "Email is required",
-        invalid_type_error: "Email must be a string",
-    })
-        .email({ message: "Invalid email address" })
-    
-    , password: z.string({
-        required_error: "Password is required",
-        invalid_type_error: "Password must be a string",
-    })
-        .min(8, { message: "Must be 8 or more characters long" })
-})
+// import {z} from 'zod'
 
-type Props = {
-    onSubmit: (data: any) => void
-    serverError: Error | undefined
-}
 
-const SignUpForm: FC<any> = (props: Props) => {
+// const email = {
+//     email: z.string({
+//         required_error: 'Email is required',
+//         invalid_type_error: 'Email must be a string',
+//     })
+//     .email({ message: "Invalid email address" })
+// }
+// const password = {
+//     password: z.string({
+//         required_error: 'Password is required',
+//         invalid_type_error: 'Password must be a string',
+//     })
+//     .min(8, { message: "Must be 8 or more characters long" })
+// }
+// const name = {
+//     name: z.string()
+//         .min(7, {message: "Must be 7 or more characters long"})
+//         .max(24, {message: "Must be 24 or less characters long"})
+//         .optional()
+// }
 
-    const {serverError, onSubmit} = props
+// const registerUserSchema = z.object({
+//     ...email,
+//     ...password,
+//     ...name,
+// })
+
+// interface FormProps {
+//     schema: any
+// }
+
+const SignUpForm: FC<FormProps> = ({schema} : FormProps) => {
+    const title = 'Sign Up'
+    const {onSubmit, serverError} = useSignUp()
 
     const { register, handleSubmit, formState: { errors }, } = useForm({
-        resolver: zodResolver(validationSchema),
+        resolver: zodResolver(schema),
     })
 
     return (
         <div className="dev_form">
-            <h2>Sign Up</h2>
+            <h2>{title}</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                     <label htmlFor="name">
@@ -80,7 +92,7 @@ const SignUpForm: FC<any> = (props: Props) => {
                 </div>
                 <div className="submit_wrapper">
                     <button type="submit">
-                        Sign Up
+                        {title}
                     </button>
                 </div>
             </form>
@@ -94,3 +106,12 @@ const SignUpForm: FC<any> = (props: Props) => {
 }
 
 export default SignUpForm
+export const getStaticProps = GetSignUpStatic()
+
+// export const getStaticProps: GetStaticProps<FormProps> = async () => {
+//     return {
+//       props: {
+//         schema: '',
+//       },
+//     }
+// }

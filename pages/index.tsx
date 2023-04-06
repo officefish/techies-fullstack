@@ -1,4 +1,4 @@
-import { NextPageWithLayout } from "@utilities/layout.utilite"
+import { NextPageWithLayout } from "@utilities/layout.types"
 import Layout from "@components/layout/Layout"
 import Home from "@components/screens/home/home"
 

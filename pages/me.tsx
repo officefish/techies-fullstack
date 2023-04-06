@@ -1,5 +1,5 @@
 import Profile from "@components/screens/profile"
-import { NextPageWithLayout } from "@utilities/layout.utilite"
+import { NextPageWithLayout } from "@utilities/layout.types"
 import Layout from "@components/layout/Layout"
 
 const ProfilePage: NextPageWithLayout = () => {

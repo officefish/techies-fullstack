@@ -30,4 +30,4 @@ export const {schemas:ProductSchemas, $ref} = buildJsonSchemas({
     createProductSchema,
     productResponseSchema,
     manyProductsResponseSchema,
-}, {$id: 'ProductSchema'})
+}, {$id: 'ProductSchemas'})

@@ -5,27 +5,32 @@ import { FastifyReply } from "fastify/types/reply"
 import { FastifyRequest } from "fastify/types/request"
 import { CookieOptions } from '@fastify/session'
 
-
 import { Role } from '@prisma/client'
 const roleEnum = z.nativeEnum(Role)
-
 
 const email = {
     email: z.string({
         required_error: 'Email is required',
         invalid_type_error: 'Email must be a string',
-    }).email()
+    })
+    .email({ message: "Invalid email address" })
 }
 const password = {
     password: z.string({
         required_error: 'Password is required',
         invalid_type_error: 'Password must be a string',
     })
+    .min(8, { message: "Must be 8 or more characters long" })
 }
-const name = { name: z.string().optional() }
+const name = {
+    name: z.string()
+        .min(7, {message: "Must be 7 or more characters long"})
+        .max(24, {message: "Must be 24 or less characters long"})
+        .optional()
+}
 const id = { id: z.string() }
 
-const loginUserSchema = z.object({
+export const loginUserSchema = z.object({
     ...email,
     ...password,
 })
@@ -100,6 +105,6 @@ export const {schemas:AuthSchemas, $ref} = buildJsonSchemas({
     registerUserSchema,
     userAcceptedResponseSchema,
     goodResponseSchema
-}, {$id: 'AuthSchema'})
+}, {$id: 'AuthSchemas'})
 
 

@@ -119,7 +119,7 @@ async function routes(server:FastifyInstance) {
     server.get('/forgot-password/:email', {
         preHandler: [server.authenticate],
         schema: {
-            description: 'Forgot password ???',
+            description: 'Forgot password',
             tags: ['password'],
         }
     }, ForgotPasswordHandler)

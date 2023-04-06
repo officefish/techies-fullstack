@@ -1,11 +1,14 @@
 import { useEffect } from "react"
-import { useAxios_POST_RawData } from "./axios.service"
+import { 
+    useAxios_POST_RawData,
+    useAxios_GET_QueryParams
+} from "./axios.service"
 import { useUser } from "./user.service"
 import { useRouter } from "next/router"
 
 import { User } from "../models/user.model"
 
-function useHook({
+function useHook_POST_RawData({
     api = 'api/auth',
     route = '/',
     redirect = '/me'
@@ -28,13 +31,12 @@ function useHook({
     return {onSubmit, serverError}
 }
 
-export function useSignIn() {
-    return useHook({route:'sign-in'})
-}
 
-export function useSignUp() {
-    return useHook({route:'sign-up'})
-}
+
+export const  useSignIn = () => useHook_POST_RawData({route:'sign-in'})
+export const useSignUp = () => useHook_POST_RawData({route:'sign-up'})
+
+
 
 
 
