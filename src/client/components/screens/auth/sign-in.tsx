@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSignIn } from "@services/auth.service"
 import {z} from 'zod'
-import SignUpForm from "./forms/sign-up.form"
+import SignInForm from "./forms/sign-in.form"
 
 const email = {
     email: z.string({
@@ -25,7 +25,7 @@ const schema = z.object({
     ...password,
 })
 
-const SignInForm: FC = () => {
+const SignIn: FC = () => {
     const title = 'Sign In'
 
     const {onSubmit, serverError} = useSignIn()
@@ -38,7 +38,7 @@ const SignInForm: FC = () => {
         <div className="container mx-auto mt-8 p-4 flex flex-col items-center font-display"> 
             <div className="dev_form">
                 <h2>{title}</h2>
-                <SignUpForm 
+                <SignInForm 
                     title={title}
                     register={register}
                     handleSubmit={handleSubmit}
@@ -52,4 +52,4 @@ const SignInForm: FC = () => {
         </div>         
   )
 }
-export default SignInForm
+export default SignIn

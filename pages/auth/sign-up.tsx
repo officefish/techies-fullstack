@@ -11,7 +11,7 @@ export default SignUpPage
 
 SignUpPage.getLayout = function getLayout(page: React.ReactElement) {
   return (
-    <Layout title="Sign In.">
+    <Layout title="Sign Up.">
       {page}
     </Layout>
   )
