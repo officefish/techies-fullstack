@@ -14,7 +14,6 @@ import { User } from "@prisma/client"
 
 import { Role } from "@prisma/client"
 
-
 async function getProtectedData(request:FastifyRequest, reply:FastifyReply) {
     // try {
     //     // There are built-in ways in Fastify
@@ -94,8 +93,18 @@ async function verifyUser(request:FastifyRequest<{
       const prisma = request.server.prisma
       const role = Role.MEMBER
       const user = await userService.UpdateUser(prisma, {email, role, verified:true})
-      reply.code(reply.codeStatus.ACCEPTED)
-        .send({verified: user.verified, role:role})
+      if (!user) {
+        reply.code(reply.codeStatus.CONFLICT)
+         .send({error: {message: 'User update failed'}})
+         return
+      }
+     
+      const secure = false
+      const domain = 'localhost'
+      const port = 8001
+      
+      const link = service.GetMeRedirectLink({secure, domain, port})
+      reply.redirect(link)
 
     } catch (e) {
       reply.code(reply.codeStatus.UNPROCESSABLE_ENTITY)
@@ -240,23 +249,19 @@ async function sendVerifyEmail(request:FastifyRequest, reply:FastifyReply, email
 
     const mailer = request.server.nodemailer
 
-    //const domain = 'api.' + request.server.env.ROOT_DOMAIN
-    const domain = 'localhost:8001/api/auth'
+    const secure = false
+    const domain = 'localhost'
+    const port = 8001
+
     const link_expires = request.server.env.LINK_EXPIRE_MINUTES
     const expires = service.NowPlusMinutes(link_expires).getTime().toString()
-   
 
     const crypto = request.server.minCrypto
     const signature = request.server.env.JWT_SIGNATURE
+    const token = await service.CreateJwt(crypto, {signature, email, expires}, ':')
 
-    const emailToken = await service.CreateJwt(crypto, {signature, email, expires}, ':')
+    const link = service.GetVerifyEmailLink({secure, domain, port, email, expires, token })
 
-    const encodedEmail = encodeURIComponent(email)
-    const link =
-      `http://${domain}/verify/` + `${encodedEmail}/${expires}/${emailToken}`
-
-    // Send an email containing a link that can be clicked
-    // to verify the associated user.
     const subject = request.server.env.SMTP_SUBJECT
     const from = request.server.env.FROM_EMAIL
     const html =

@@ -16,6 +16,8 @@ import { IsMobile} from "./help.service"
 import { CreateJwt } from "./crypto.service"
 import { SendMail } from "./mail.service"
 import { GetResetPasswordLink } from './link.service'
+import { GetVerifyEmailLink } from "./link.service"
+import { GetMeRedirectLink } from "./link.service"
 
 export default {
     CreateSession,
@@ -34,5 +36,7 @@ export default {
     NowPlusDays,
     IsMobile,
     SendMail,
-    GetResetPasswordLink
+    GetVerifyEmailLink,
+    GetResetPasswordLink,
+    GetMeRedirectLink
 }

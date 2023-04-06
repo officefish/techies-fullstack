@@ -1,18 +1,51 @@
-type ResetPasswordInput = {
+interface LinkProps {
     secure: boolean,
     domain: string,
+    port: number,
+    
+}
+interface RouteLinkProps extends LinkProps {
+    route: string
+}
+interface TokenLinkProps extends LinkProps {
     email: string,
-    expires: Date,
+    expires: string,
     token: string
 }
+interface RouteTokenLinkProps extends TokenLinkProps {
+    route: string,
+    api: string
+}
 
-function getResetPasswordLink(p:ResetPasswordInput) {
-    const protocol:string = p.secure ? 'https' : 'http'
-    const encodedEmail = encodeURIComponent(p.email)
-    return `${protocol}://${p.domain}/password-reset.html` +
-           `?email=${encodedEmail}&expires=${p.expires}&token=${p.token}`
+const getTokenLink = ({secure, domain, port, email, expires, token, api, route}: RouteTokenLinkProps ) => {
+    const protocol = secure ? 'https' : 'http'
+    const encodedEmail = encodeURIComponent(email)
+    return `${protocol}://${domain}:${port}/${api}/${route}/` +
+           `${encodedEmail}/${expires}/${token}`
+           
+}
+
+const getLink = ({secure, domain, port, route}: RouteLinkProps) => {
+    const protocol = secure ? 'https' : 'http'
+    return `${protocol}://${domain}:${port}/${route}` 
+}
+
+const getResetPasswordLink = (input: TokenLinkProps) => {
+    return getTokenLink({...input, api:'api/auth', route: 'password-reset' }) 
+}
+
+const getVerifyEmailLink = (input: TokenLinkProps) => {
+    return getTokenLink({...input, api:'api/auth', route: 'verify' })
+}
+
+const getMeRedirectLink = (input: LinkProps) => {
+    return getLink({...input, route:'me'})
 }
 
 export {  
-    getResetPasswordLink as GetResetPasswordLink
+    getResetPasswordLink as GetResetPasswordLink,
+    getVerifyEmailLink as GetVerifyEmailLink,
+    getMeRedirectLink as GetMeRedirectLink
 }
+
+

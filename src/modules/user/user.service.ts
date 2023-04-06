@@ -45,9 +45,9 @@ async function deleteUniqueUserById (prisma:PrismaClient, userId:string) {
 }
 
 async function deleteAllUsers(prisma:PrismaClient) {
-    await prisma.session.deleteMany({})
-    await prisma.product.deleteMany({}) 
-    await prisma.user.deleteMany({})
+    prisma && prisma.session && await prisma.session.deleteMany({})
+    prisma && prisma.product && await prisma.product.deleteMany({}) 
+    prisma && prisma.user && await prisma.user.deleteMany({})
 }
 
 

@@ -71,8 +71,9 @@ async function buildApp(options: AppOptions = {}) {
     fastify.register(plugins.NextPlugin)
     fastify.register(NextRoutes)
   
-    //await DeleteAllUsers(fastify.prisma)
     await fastify.after()
+    
+    await DeleteAllUsers(fastify.prisma)
     return fastify
 }
 

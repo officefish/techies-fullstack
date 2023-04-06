@@ -1,5 +1,5 @@
 import fastifyEnv from "@fastify/env"
-import { FastifyBaseLogger } from "fastify"
+//import { FastifyBaseLogger } from "fastify"
 import fp from 'fastify-plugin'
 
 // declare module 'fastify' {

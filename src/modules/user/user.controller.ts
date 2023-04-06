@@ -86,11 +86,16 @@ async function forgotPassword(request:FastifyRequest<{
 }>, reply:FastifyReply) {
   const {email} = request.params
   const jwt = request.server.jwt
-  try {
+ 
     // Get the record from the "user" collection with the specified email.
     const prisma = request.server.prisma
     const user = await userService.GetUniqueUser(prisma, {email})
-    if (user) {
+    if (!user) {
+      // Return a success status even if user doesn't exist
+      // so bots cannot use this service to determine
+      // whether a user with a specified email exists.
+      reply.send({status:'ok'})
+    }
       // Create a password reset link to be included in an email message.
       // The "/user/reset" REST service called from password-reset.js
       // verifies that the "email" and "expires" values
@@ -98,12 +103,15 @@ async function forgotPassword(request:FastifyRequest<{
       // So it is not possible to use an expired link
       // by simply changing the "expires" query parameter.
       const minutes = request.server.env.LINK_EXPIRE_MINUTES
-      const expires = service.NowPlusMinutes(minutes)
+      const expires = service.NowPlusMinutes(minutes).toString()
       const token = await service.Sign(jwt, {email, expires })
       const secure = false
+
       const domain = 'localhost'
+      const port = 8001
       
-      const link = service.GetResetPasswordLink({secure, domain, email, token, expires})
+      const link = service.GetResetPasswordLink({secure, domain, port, email, token, expires})
+      console.log(link)
       // Send an email containing a link that can be clicked
       // to reset the password of the associated user.
       const mailer = request.server.nodemailer
@@ -112,15 +120,16 @@ async function forgotPassword(request:FastifyRequest<{
       const html =
           'Click the link below to reset your password.<br><br>' +
           `<a href="${link}">RESET PASSWORD</a>`
-        await service.SendMail(mailer, {from, to: email, subject, html})
-  }
-  // Return a success status even if user doesn't exist
-  // so bots cannot use this service to determine
-  // whether a user with a specified email exists.
+
+  try {
+    await service.SendMail(mailer, {from, to: email, subject, html})
+    // Return a success status even if user doesn't exist
+    // so bots cannot use this service to determine
+    // whether a user with a specified email exists.
     reply.send({status:'ok'})
   } catch (e) {
-    console.error('forgotPassword error:', e)
-    reply.code(400).send('error sending password reset email')
+    reply.code(reply.codeStatus.BAD_REQUEST)
+      .send({error: { message:'Error sending password reset email'}})
   }
 }
   
@@ -192,8 +201,6 @@ async function deleteUser(request:FastifyRequest<{
   } catch (e) {
       reply.code(400).send({error:e})
   }
-
- 
 }
 
 async function deleteUserSessions(request:FastifyRequest, reply:FastifyReply) {
@@ -209,7 +216,8 @@ async function getNewPassword(request:FastifyRequest<{
   // to validate a password reset request.
   const secure = false
   const domain = 'localhost'
-  const link = service.GetResetPasswordLink({secure, domain, email, token, expires:new Date(expires)})
+  const port = 8001
+  const link = service.GetResetPasswordLink({secure, domain, port, email, token, expires})
   reply.redirect(link)
 }
 
