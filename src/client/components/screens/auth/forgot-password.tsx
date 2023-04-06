@@ -4,6 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {z} from 'zod'
 import { useForgotPassword } from "@services/user.service"
 import ForgotPasswordForm from "./forms/forgot-password.form"
+import { useState } from "react"
+import Link from "next/link"
 
 const email = {
     email: z.string({
@@ -17,9 +19,16 @@ const schema = z.object({
     ...email
 })
 
+type ReplyWithStatus = {
+    status: string
+}
+
 const ForgotPassword : FC = () => {
 
-    const {onSubmit, reply, serverError} = useForgotPassword()
+    const [email, setEmail] = useState('')
+
+    const {onSubmit, reply, serverError} = useForgotPassword<ReplyWithStatus>({setEmail})
+    const [isSent, setIsSent] = useState(false)
     
     const title = 'Request password'
     const { register, handleSubmit, formState: { errors }, } = useForm({
@@ -27,20 +36,35 @@ const ForgotPassword : FC = () => {
     })
 
     useEffect(() => {
-        console.log(reply)
+        if (reply && reply.status === 'ok') {
+            setIsSent(true)            
+        }
     }, [reply])
 
     return (
-        <div className="container mx-auto mt-8 p-4 flex flex-col items-center font-display"> 
+        <div className="dev_form_layout"> 
             <div className="dev_form">
                 <h2>{title}</h2>
-                <ForgotPasswordForm 
+                {isSent? (
+                    <div className="no_form">
+                        <p>
+                            Reset password instruction sent to: <span>{email}</span>
+                        </p>
+                        <div className="flex items-center justify-center">
+                            <Link className="link" href="/auth/sign-in">
+                                Try sign in?
+                            </Link>
+                        </div>
+                    </div>
+                ) : (
+                    <ForgotPasswordForm 
                     title={title}
                     register={register}
                     handleSubmit={handleSubmit}
                     submitHandler={onSubmit}
                     errors={errors}
-                />
+                 />
+                )}
                 <p className="copyright"></p> 
                 {serverError?.message && 
                     <p className="server_error">{serverError.message?.toString()}</p>}    

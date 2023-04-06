@@ -193,7 +193,7 @@ export function useAxios_GET_QueryParams<T = {}> ({
     withCredentials = true
 } = {}) {
 
-    const request = async (input: T) => {
+    const request = async (input: string) => {
         const url = `${protocol}://${host}:${port}/${api}/${route}/{${input}}`
         return await axios
             .get(url, {
@@ -205,9 +205,9 @@ export function useAxios_GET_QueryParams<T = {}> ({
     } 
 
     const [serverError, setServerError] = useState<Error | undefined>(undefined)
-    const [reply, setReply] = useState(null)
+    const [reply, setReply] = useState<T>()
 
-    const onSubmit = async (data:T) => {
+    const onSubmit = async (data:string) => {
         const response = await request(data)
         response instanceof Error
             ? setServerError(response)

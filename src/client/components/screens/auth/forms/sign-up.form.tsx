@@ -10,6 +10,7 @@ const SignUpForm: FC<FormProps> = ({title, register, handleSubmit, submitHandler
             <FormField title='Email' register={register} errors={errors} />
             <FormField title='Password' register={register} errors={errors} />
             <SubmitButton title={title} />
+            <div className="spacer"></div>
         </form>
     )
 }

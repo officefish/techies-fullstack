@@ -8,6 +8,7 @@ const ForgotPasswordForm : FC<FormProps> = ({title, register, handleSubmit, subm
         <form onSubmit={handleSubmit(submitHandler)}>
             <FormField title='Email' register={register} errors={errors} />
             <SubmitButton title={title} />
+            <div className="spacer"></div>
         </form>
    )
 }

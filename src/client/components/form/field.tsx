@@ -4,7 +4,7 @@ import { FormFieldProps } from "@utilities/form.types"
 const FormField : FC<FormFieldProps> = ({title, placeholder, register, errors}) => {
     const tag = title.toLowerCase()
     return (
-        <div className="mt-4">
+        <div className="field">
             <label htmlFor={tag}>
                 {title}
             </label>
