@@ -1,25 +1,14 @@
-import ForgotPasswordForm from "@components/screens/auth/forms/forgot-password.form"
-import { WithLayout, NextPageWithLayout } from "@utilities/layout.types"
+import ForgotPassword from "@components/screens/auth/forgot-password"
+import { NextPageWithLayout } from "@utilities/layout.types"
 import Layout from "@components/layout/Layout"
 
-import { FormProps } from "@/client/utilities/form.types"
-import zodToJsonSchema from "zod-to-json-schema"
 
-const ForgotPasswordPage: WithLayout<FormProps> = ({schema}) => {
+const ForgotPasswordPage: NextPageWithLayout = () => {
   return (
-    <ForgotPasswordForm  />
+    <ForgotPassword />
   )
 }
 export default ForgotPasswordPage
-
-
-export const getStaticProps = async () => {
-    const schema = ""
-    return { props: {
-            schema
-        }
-    }
-} 
 
 ForgotPasswordPage.getLayout = function getLayout(page: React.ReactElement) {
   return (

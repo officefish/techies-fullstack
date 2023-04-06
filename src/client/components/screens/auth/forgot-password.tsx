@@ -1,9 +1,9 @@
-import { FC } from "react"
+import { FC, useEffect } from "react"
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {useSignUp} from '@services/auth.service'
 import {z} from 'zod'
-import SignUpForm from "./forms/sign-up.form"
+import { useForgotPassword } from "@services/user.service"
+import ForgotPasswordForm from "./forms/forgot-password.form"
 
 const email = {
     email: z.string({
@@ -12,39 +12,29 @@ const email = {
     })
     .email({ message: "Invalid email address" })
 }
-const password = {
-    password: z.string({
-        required_error: 'Password is required',
-        invalid_type_error: 'Password must be a string',
-    })
-    .min(8, { message: "Must be 8 or more characters long" })
-}
-const name = {
-    name: z.string()
-        .min(7, {message: "Must be 7 or more characters long"})
-        .max(24, {message: "Must be 24 or less characters long"})
-        .optional()
-}
 
 const schema = z.object({
-    ...email,
-    ...password,
-    ...name,
+    ...email
 })
 
-const SignUp: FC = () => {
-    const title = 'Sign Up'
-    const {onSubmit, serverError} = useSignUp()
+const ForgotPassword : FC = () => {
 
+    const {onSubmit, reply, serverError} = useForgotPassword()
+    
+    const title = 'Request password'
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: zodResolver(schema),
     })
+
+    useEffect(() => {
+        console.log(reply)
+    }, [reply])
 
     return (
         <div className="container mx-auto mt-8 p-4 flex flex-col items-center font-display"> 
             <div className="dev_form">
                 <h2>{title}</h2>
-                <SignUpForm 
+                <ForgotPasswordForm 
                     title={title}
                     register={register}
                     handleSubmit={handleSubmit}
@@ -56,6 +46,7 @@ const SignUp: FC = () => {
                     <p className="server_error">{serverError.message?.toString()}</p>}    
             </div>
         </div>
-   )
+  )
 }
-export default SignUp
+
+export default ForgotPassword
