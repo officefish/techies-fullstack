@@ -94,6 +94,22 @@ const updateRoleSchema = z.object({
     role:roleEnum.optional()
 })
 
+const status = { status: z.string() }
+const message = { message: z.string() }
+
+const error = z.object({
+    ...message
+})
+
+const okWithMessageResponseSchema = z.object({
+    ...status,
+    ...message
+})
+
+const errorResponseSchema = z.object({
+    error
+})
+
 type CreateUserInput = z.infer<typeof createUserSchema>
 type UniqueUserInput = z.infer<typeof uniqueUserSchema>
 type ManyUsersInput = z.infer<typeof manyUsersSchema>
@@ -123,5 +139,7 @@ export const {schemas:UserSchemas, $ref} = buildJsonSchemas({
     newPasswordSchema,
     changedPasswordSchema,
     resetPasswordSchema,
-    updateRoleSchema
+    updateRoleSchema,
+    okWithMessageResponseSchema,
+    errorResponseSchema
 }, {$id: 'UserSchemas'})

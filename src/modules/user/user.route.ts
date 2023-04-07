@@ -130,6 +130,11 @@ async function routes(server:FastifyInstance) {
             body: $ref('resetPasswordSchema'),
             description: 'Reset User password.',
             tags: ['password'],
+            response: {
+                202: $ref('okWithMessageResponseSchema'),
+                400: $ref('errorResponseSchema'),
+                409: $ref('errorResponseSchema')
+            },
         }
     }, ResetPasswordHandler)
 

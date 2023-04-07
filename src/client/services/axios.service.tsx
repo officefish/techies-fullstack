@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
 const HOST = "localhost"
 const PORT = 8001
 
-export function useAxiosPostRawDataThanRedirect ({
+export function useAxios_POST_RawData_Redirect ({
     protocol = 'http',
     host = HOST,
     port = PORT,
@@ -194,7 +194,7 @@ export function useAxios_GET_QueryParams<T = {}> ({
 } = {}) {
 
     const request = async (input: string) => {
-        const url = `${protocol}://${host}:${port}/${api}/${route}/{${input}}`
+        const url = `${protocol}://${host}:${port}/${api}/${route}/${input}`
         return await axios
             .get(url, {
                 headers: {...headers},

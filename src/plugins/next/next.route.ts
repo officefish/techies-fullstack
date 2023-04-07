@@ -23,6 +23,7 @@ async function routes(server:FastifyInstance) {
     })
     server.next(`/auth/sign-in`)
     server.next('/auth/forgot-password')
+    server.next('/auth/password-reset/*')
 }
 
 export { routes as NextRoutes } 

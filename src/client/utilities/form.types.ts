@@ -2,7 +2,6 @@ import {
     FieldErrors, 
     FieldValues,
     SubmitHandler,
-    SubmitErrorHandler,
     UseFormRegister,
     UseFormHandleSubmit
 } from "react-hook-form"
@@ -19,11 +18,19 @@ export interface FormFieldProps {
     placeholder?: string,
     register: UseFormRegister<FieldValues>
     errors: FieldErrors<FieldValues>
+    value?: string | number
 }
 
 export interface SubmitButtonProps {
     title: string
 }
 
+export interface TokenProps {
+    email: string,
+    expires: number,
+    token: string
+}
+
+export interface FormTokenProps extends FormProps, TokenProps {}
 
 

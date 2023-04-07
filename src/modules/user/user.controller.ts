@@ -84,9 +84,7 @@ async function createUser(request:FastifyRequest<{
 async function forgotPassword(request:FastifyRequest<{
   Params:ForgotPasswordInput
 }>, reply:FastifyReply) {
-  const {email} = request.params
-  const jwt = request.server.jwt
- 
+    const {email} = request.params
     // Get the record from the "user" collection with the specified email.
     const prisma = request.server.prisma
     const user = await userService.GetUniqueUser(prisma, {email})
@@ -95,6 +93,7 @@ async function forgotPassword(request:FastifyRequest<{
       // so bots cannot use this service to determine
       // whether a user with a specified email exists.
       reply.send({status:'ok'})
+      return
     }
       // Create a password reset link to be included in an email message.
       // The "/user/reset" REST service called from password-reset.js
@@ -103,8 +102,12 @@ async function forgotPassword(request:FastifyRequest<{
       // So it is not possible to use an expired link
       // by simply changing the "expires" query parameter.
       const minutes = request.server.env.LINK_EXPIRE_MINUTES
-      const expires = service.NowPlusMinutes(minutes).toString()
-      const token = await service.Sign(jwt, {email, expires })
+      const expires = service.NowPlusMinutes(minutes).getTime().toString()
+
+      const crypto = request.server.minCrypto
+      const signature = request.server.env.JWT_SIGNATURE
+
+      const token = await service.CreateJwt(crypto, {signature, email, expires}, ':')
       const secure = false
 
       const domain = 'localhost'
@@ -225,16 +228,18 @@ async function resetPassword(request:FastifyRequest<{
   Body: ResetPasswordInput
 }>, reply:FastifyReply) {
   const {email, expires, password, token} = request.body
-  // Determine if the token matches the
-  // specified email and expires timestamp.
+
   const crypto = request.server.minCrypto
   const signature = request.server.env.JWT_SIGNATURE
   
   const emailToken = await service.CreateJwt(crypto, {signature, email, expires}, ':')
-  const matches = token === emailToken
+  const tokenMatches = token === emailToken
+  const expiresMatches = Date.now() <= +expires
+
   // If the token does not match or is expired ...
-  if (!matches || Date.now() > +expires) {
-    reply.code(400).send({error: {message:'password reset link expired'}})
+  if (!tokenMatches || !expiresMatches) {
+    reply.code(reply.codeStatus.BAD_REQUEST)
+      .send({error: {message:'password reset link expired'}})
     return
   }
   
@@ -247,11 +252,19 @@ async function resetPassword(request:FastifyRequest<{
     const salt = await service.GenerateSalt(bcrypt, saltLength)
     const hashedPassword = await service.Hash(bcrypt, password, salt)
 
-    await userService.UpdateUser(prisma, {email, password:hashedPassword})
-    reply.code(200).send({status:'ok', message:'password reset'})
+    // Update user Role and verified status
+    const user = await userService.GetUniqueUser(prisma, {email})
+    const role = user?.role !== Role.GUEST
+      ? user?.role
+      : Role.MEMBER
+    const verified = true
+
+    await userService.UpdateUser(prisma, {email, password:hashedPassword, role, verified})
+    reply.code(reply.codeStatus.ACCEPTED).send({status:'ok', message:'password reset'})
   
   } catch (e) {
-    reply.code(400).send(e)
+    reply.code(reply.codeStatus.CONFLICT)
+      .send({error: {message:'Error occurs User password update with prisma.'}})
   }
 }
 

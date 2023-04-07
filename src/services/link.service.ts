@@ -25,13 +25,20 @@ const getTokenLink = ({secure, domain, port, email, expires, token, api, route}:
            
 }
 
+// const getTokenQueryParamsLink = ({secure, domain, port, email, expires, token, api, route}: RouteTokenLinkProps ) => {
+//     const protocol = secure ? 'https' : 'http'
+//     const encodedEmail = encodeURIComponent(email)
+//     return `${protocol}://${domain}:${port}/${api}/${route}` +
+//            `?email=${encodedEmail}/expires=${expires}/token=${token}`
+// }
+
 const getLink = ({secure, domain, port, route}: RouteLinkProps) => {
     const protocol = secure ? 'https' : 'http'
     return `${protocol}://${domain}:${port}/${route}` 
 }
 
 const getResetPasswordLink = (input: TokenLinkProps) => {
-    return getTokenLink({...input, api:'api/auth', route: 'password-reset' }) 
+    return getTokenLink({...input, api:'auth', route: 'password-reset' }) 
 }
 
 const getVerifyEmailLink = (input: TokenLinkProps) => {
