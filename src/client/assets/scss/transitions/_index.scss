@@ -1,0 +1,5 @@
+@use './button.transition.scss';
+
+button {
+    @include transition;
+}

@@ -1,0 +1,22 @@
+                                    // tailwind support:
+button {
+    /* display */
+    display: inline-flex;           // inline-flex
+    flex-grow: initial;             // flex-grow-0
+    flex-shrink: 0;                 // flex-shrink-0;
+    flex-basis: auto;       
+    /* flex setup */
+    flex-wrap: wrap;                // flex-wrap
+    flex-grow: initial;
+    flex-direction: initial;
+    /* flex align */
+    justify-content: center;        // justify-center 
+    align-items: center;            // items-center
+    /* text setup */
+    text-align: center;             // text-center
+    line-height: 1em;               
+    /* usability */
+    user-select: none;              // select-none
+    /* cursor setup */
+    cursor: pointer;                // cursor-pointer
+}

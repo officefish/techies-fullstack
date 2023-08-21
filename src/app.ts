@@ -4,6 +4,8 @@ import plugins from './plugins'
 import { UserRoutes } from './modules/user/user.route'
 import { UserSchemas } from './modules/user/user.schema'
 
+import { UserSettingsRoutes } from './modules/user-settings/user-settings.route'
+
 import { ProductRoutes } from './modules/product/product.route'
 import { ProductSchemas } from './modules/product/product.schema'
 
@@ -59,6 +61,7 @@ async function buildApp(options: AppOptions = {}) {
     fastify.register(plugins.SwaggerPlugin)
 
     fastify.register(UserRoutes, { prefix: 'api/users' })
+    fastify.register(UserSettingsRoutes, {prefix: 'api/user-settings'})
     fastify.register(ProductRoutes, { prefix: 'api/products' })
     fastify.register(AuthRoutes, {prefix: 'api/auth'})
 
@@ -73,7 +76,7 @@ async function buildApp(options: AppOptions = {}) {
   
     await fastify.after()
     
-    await DeleteAllUsers(fastify.prisma)
+    //await DeleteAllUsers(fastify.prisma)
     return fastify
 }
 

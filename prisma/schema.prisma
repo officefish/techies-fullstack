@@ -27,6 +27,7 @@ model User {
   role      Role     @default(GUEST)
   products  Product[]
   sessions  Session[]
+  basicInfo BasicInfo?
 }
 
 enum Role {
@@ -62,6 +63,50 @@ model Session {
   userId      String    @db.ObjectId
 }
 
+// BasicInfo
+
+model FullName {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  firstName       String?
+  lastName        String?
+  basicInfo       BasicInfo @relation(fields:[basicInfoId], references:[id]) 
+  basicInfoId     String    @db.ObjectId @unique
+}
+
+model Career {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  company     String?
+  role        String?
+  basicInfo   BasicInfo @relation(fields:[basicInfoId], references:[id])
+  basicInfoId String    @db.ObjectId @unique
+}
+
+model Education {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  university  String?
+  faculty     String?
+  basicInfo   BasicInfo @relation(fields:[basicInfoId], references:[id])
+  basicInfoId String    @db.ObjectId @unique
+}
+
+model Location {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  country     String?
+  region      String?
+  timeZone    String?
+  basicInfo   BasicInfo @relation(fields:[basicInfoId], references:[id])
+  basicInfoId String    @db.ObjectId @unique
+}
+
+model BasicInfo {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  user       User      @relation(fields:[userId], references:[id]) 
+  userId     String    @db.ObjectId @unique
+  fullName   FullName?
+  career     Career?
+  education  Education?
+  location   Location?
+}
 
 
 
